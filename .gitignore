@@ -1,1 +1,4 @@
 output.json
+.snowpack
+build
+node_modules
