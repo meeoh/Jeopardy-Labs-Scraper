@@ -17,6 +17,7 @@ function cleanupText(text) {
 
 function buildJson(categories, questions, moneyFactor) {
   const gameObject = [];
+  const columnCount = Math.min(categories.length, NUM_COLS);
 
   categories.forEach((category) => {
     gameObject.push({
@@ -27,7 +28,7 @@ function buildJson(categories, questions, moneyFactor) {
 
   let row = 0;
   questions.forEach(({ query, response }, idx) => {
-    const categoryIndex = idx % NUM_COLS;
+    const categoryIndex = idx % columnCount;
     const value = `$${(row + 1) * moneyFactor}`;
     gameObject[categoryIndex].questions.push({
       query,
@@ -35,7 +36,7 @@ function buildJson(categories, questions, moneyFactor) {
       amount: value,
       dd: false,
     });
-    if (categoryIndex == NUM_COLS - 1) row += 1;
+    if (categoryIndex == columnCount - 1) row += 1;
   });
 
   return gameObject;
