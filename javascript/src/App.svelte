@@ -13,16 +13,18 @@
       doubleJeopardyUrl.startsWith("https://jeopardylabs.com/play/")
     ) {
       const finalObject = await Scrape(jeopardyUrl, doubleJeopardyUrl);
-      finalObject.final_jeopardy = {
-        category: finalCategory,
-        questions: [
-          {
-            amount: "FJ",
-            query: finalQuery,
-            response: finalResponse,
-          },
-        ],
-      };
+      finalObject.final_jeopardy = [
+        {
+          category: finalCategory,
+          questions: [
+            {
+              amount: "FJ",
+              query: finalQuery,
+              response: finalResponse,
+            },
+          ],
+        },
+      ];
 
       finalObject.status = {
         author: `JeopardyLabsScraper - ${name}`,
