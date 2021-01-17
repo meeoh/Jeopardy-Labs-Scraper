@@ -2,7 +2,20 @@
 <script>
   /* component logic will go here */
   import { Scrape } from "./Scraper";
-  Scrape();
+
+  let output = "";
+  async function handleSubmit() {
+    output = JSON.stringify(
+      await Scrape(
+        "https://jeopardylabs.com/play/movies-movies-movies-736",
+        "https://jeopardylabs.com/play/movies-movies-movies-736"
+      )
+    );
+  }
+
+  function handleCopy() {
+    navigator.clipboard.writeText(output);
+  }
 </script>
 
 <div class="App">
@@ -12,11 +25,11 @@
   <input />
   <br />
   <br />
-  <button>Submit</button>
+  <button on:click={handleSubmit}>Submit</button>
   <p>Output:</p>
-  <textarea />
+  <textarea value={output} />
   <br />
-  <button>Copy</button>
+  <button on:click={handleCopy}>Copy</button>
 </div>
 
 <style>
