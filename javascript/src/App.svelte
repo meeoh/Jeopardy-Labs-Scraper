@@ -7,6 +7,7 @@
   let finalQuery = "";
   let finalResponse = "";
   let name = "";
+  let warnings = [];
   async function handleSubmit() {
     if (
       jeopardyUrl.startsWith("https://jeopardylabs.com/play/") &&
@@ -33,6 +34,43 @@
         show_number: 0,
         unix_timestamp: Date.now(),
       };
+      warnings = [];
+      if (finalObject.jeopardy.length < 6) {
+        warnings.push(
+          `${
+            6 - finalObject.jeopardy.length
+          } categories must be added manually to jeopardy\n`
+        );
+      }
+
+      if (finalObject.double_jeopardy.length < 6) {
+        warnings.push(
+          `${
+            6 - finalObject.double_jeopardy.length
+          } categories must be added manually to double_jeopardy\n`
+        );
+      }
+
+      finalObject.jeopardy.forEach((category) => {
+        if (category.questions.length < 5) {
+          warnings.push(
+            `${
+              5 - category.questions.length
+            } questions must be added to category ${category.category}`
+          );
+        }
+      });
+
+      finalObject.double_jeopardy.forEach((category) => {
+        if (category.questions.length < 5) {
+          warnings.push(
+            `${
+              5 - category.questions.length
+            } questions must be added to category ${category.category}`
+          );
+        }
+      });
+
       output = JSON.stringify(finalObject, undefined, 2);
     }
   }
@@ -59,6 +97,9 @@
   <br />
   <br />
   <button on:click={handleSubmit}>Submit</button>
+  {#each warnings as warning}
+    <li>{warning}</li>
+  {/each}
   <p>Output:</p>
   <textarea value={output} />
   <br />
