@@ -42,8 +42,8 @@ function buildJson(categories, questions, moneyFactor) {
   return gameObject;
 }
 
-const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
-// const CORS_PROXY_URL = "https://blooming-ridge-64659.herokuapp.com/";
+// const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+const CORS_PROXY_URL = "https://blooming-ridge-64659.herokuapp.com/";
 
 const fetchGame = async (url, moneyFactor) => {
   const response = await fetch(`${CORS_PROXY_URL}${url}`, {
