@@ -45,9 +45,9 @@
 <div class="App">
   <p>Author name:</p>
   <input bind:value={name} />
-  <p>Jeopardy URL:</p>
+  <p>Jeopardy URL (https://jeopardylabs.com/play/title):</p>
   <input bind:value={jeopardyUrl} />
-  <p>Double Jeopardy URL:</p>
+  <p>Double Jeopardy URL (https://jeopardylabs.com/play/title):</p>
   <input bind:value={doubleJeopardyUrl} />
   <br />
   <p>Final Jeopardy Category:</p>
