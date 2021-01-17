@@ -1,16 +1,18 @@
-<!-- App.svelte -->
 <script>
-  /* component logic will go here */
   import { Scrape } from "./Scraper";
-
   let output = "";
+  let jeopardyUrl = "";
+  let doubleJeopardyUrl = "";
   async function handleSubmit() {
-    output = JSON.stringify(
-      await Scrape(
-        "https://jeopardylabs.com/play/movies-movies-movies-736",
-        "https://jeopardylabs.com/play/movies-movies-movies-736"
-      )
-    );
+    if (
+      jeopardyUrl.startsWith("https://jeopardylabs.com/play/") &&
+      doubleJeopardyUrl.startsWith("https://jeopardylabs.com/play/")
+    )
+      output = JSON.stringify(
+        await Scrape(jeopardyUrl, doubleJeopardyUrl),
+        undefined,
+        2
+      );
   }
 
   function handleCopy() {
@@ -20,9 +22,9 @@
 
 <div class="App">
   <p>Jeopardy URL:</p>
-  <input />
+  <input bind:value={jeopardyUrl} />
   <p>Double Jeopardy URL:</p>
-  <input />
+  <input bind:value={doubleJeopardyUrl} />
   <br />
   <br />
   <button on:click={handleSubmit}>Submit</button>

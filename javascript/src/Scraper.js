@@ -41,8 +41,11 @@ function buildJson(categories, questions, moneyFactor) {
   return gameObject;
 }
 
+// const CORS_PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
+const CORS_PROXY_URL = "https://blooming-ridge-64659.herokuapp.com/";
+
 const fetchGame = async (url) => {
-  const response = await fetch(`https://cors-anywhere.herokuapp.com/${url}`, {
+  const response = await fetch(`${CORS_PROXY_URL}${url}`, {
     headers: {
       "x-requested-with": "javascript",
     },
@@ -64,8 +67,8 @@ const fetchGame = async (url) => {
 };
 
 export const Scrape = async (jeopardyUrl, doubleJeopardyUrl) => {
-  const jeopardyGame = {}; //await fetchGame(jeopardyUrl);
-  const doubleJeopardyGame = {}; // await fetchGame(doubleJeopardyUrl);
+  const jeopardyGame = await fetchGame(jeopardyUrl);
+  const doubleJeopardyGame = await fetchGame(doubleJeopardyUrl);
 
   return {
     jeopardy: jeopardyGame,
