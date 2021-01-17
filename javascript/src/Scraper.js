@@ -28,7 +28,6 @@ function buildJson(categories, questions, moneyFactor) {
   let row = 0;
   questions.forEach(({ query, response }, idx) => {
     const categoryIndex = idx % NUM_COLS;
-    if (categoryIndex == NUM_COLS - 1) row = (row + 1) % NUM_ROWS;
     const value = `$${(row + 1) * moneyFactor}`;
     gameObject[categoryIndex].questions.push({
       query,
@@ -36,15 +35,16 @@ function buildJson(categories, questions, moneyFactor) {
       amount: value,
       dd: false,
     });
+    if (categoryIndex == NUM_COLS - 1) row += 1;
   });
 
   return gameObject;
 }
 
-// const CORS_PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
-const CORS_PROXY_URL = "https://blooming-ridge-64659.herokuapp.com/";
+const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+// const CORS_PROXY_URL = "https://blooming-ridge-64659.herokuapp.com/";
 
-const fetchGame = async (url) => {
+const fetchGame = async (url, moneyFactor) => {
   const response = await fetch(`${CORS_PROXY_URL}${url}`, {
     headers: {
       "x-requested-with": "javascript",
@@ -54,21 +54,33 @@ const fetchGame = async (url) => {
   const node = toNode(text);
 
   const categoriesRow = node.getElementsByClassName("grid-row")[0];
-  const categories = cleanupText(categoriesRow.textContent);
+  const categories = cleanupText(categoriesRow.textContent).slice(0, NUM_COLS);
 
-  const questionsHtml = Array.from(node.getElementsByClassName("cell points"));
-  const questions = questionsHtml.reduce((acc, curr) => {
-    const cleanedMarkup = cleanupText(curr.textContent);
-    acc.push({ query: cleanedMarkup[1], response: cleanedMarkup[0] });
-    return acc;
-  }, []);
+  const gridRows = Array.from(
+    node.getElementsByClassName("grid-row-questions")
+  ).slice(0, NUM_ROWS);
 
-  return buildJson(categories, questions, 200);
+  const questions = [];
+  gridRows.forEach((gridrow) => {
+    const cells = Array.from(
+      gridrow.getElementsByClassName("cell points")
+    ).slice(0, NUM_COLS);
+
+    cells.forEach((cell) => {
+      const cleanedMarkup = cleanupText(cell.textContent);
+      questions.push({
+        query: cleanedMarkup[1],
+        response: cleanedMarkup[2],
+      });
+    });
+  });
+
+  return buildJson(categories, questions, moneyFactor);
 };
 
 export const Scrape = async (jeopardyUrl, doubleJeopardyUrl) => {
-  const jeopardyGame = await fetchGame(jeopardyUrl);
-  const doubleJeopardyGame = await fetchGame(doubleJeopardyUrl);
+  const jeopardyGame = await fetchGame(jeopardyUrl, 200);
+  const doubleJeopardyGame = await fetchGame(doubleJeopardyUrl, 400);
 
   return {
     jeopardy: jeopardyGame,
